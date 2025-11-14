@@ -16,7 +16,6 @@ const regenerateMiddleware = async (req, res  , next)=>{
 
 	if(!user) res.status(404).json({msg: 'the user is deleted'})
 
-	if(user.refreshToken !== refreshToken) return res.status(403).json({msg:'logged into another device relogin to access here'})
 
 	const decoded = {
 	    fullName : foundUser.fullName,
@@ -31,11 +30,11 @@ const regenerateMiddleware = async (req, res  , next)=>{
 	    expiresIn: '30d',
 	})
 
-	req.cookies('accessToken' , newAccessToken , {
+	res.cookie('accessToken' , newAccessToken , {
 	    httpOnly:true, 
 	    maxAge : 30*24*60*60*1000
 	} )
-	req.cookies('refreshToken' , newRefreshToken , {
+	res.cookie('refreshToken' , newRefreshToken , {
 	    httpOnly:true, 
 	    maxAge : 30*24*60*60*1000
 	} )

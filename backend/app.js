@@ -12,6 +12,8 @@ const signupController = require('./routers/signupRouter')
 const loginController  = require('./routers/loginRouter')
 const verifyPassportJWT = require('./middlewares/verifyPassportJWT') 
 const homeController =  require('./routers/homeRouter')
+const cloudinaryMiddleware = require('./middlewares/cloudinaryMiddleware')
+const profilePicController = require('./routers/profilePicRouter')
 const googleController = require('./routers/googleLoginRouter')
 
 connectDB()
@@ -27,9 +29,8 @@ app.use('/auth' , googleController)
 app.use('/home' , verifyPassportJWT)
 app.use('/home' , homeController)
 
-app.get('/' , (req , res)=>{
-    return res.status(500).json({msg : 'unexpected msg error'})
-})
+app.use("/uploadProfile", [verifyPassportJWT, cloudinaryMiddleware]);
+app.use("/uploadProfile", profilePicController);
 
 mongoose.connection.once("open", ()=>{
     console.log("connected to mongoDB")
