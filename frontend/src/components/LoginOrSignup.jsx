@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
+import { TailSpin } from 'react-loader-spinner'
 
 const checkUsernameValidity = username => {
     username = username.trim();
@@ -31,10 +32,24 @@ export default function LoginOrSignup() {
     const [passwordCorrectFormat, setPasswordCorrectFormat] = useState(true);
     const [emailCorrectFormat, setEmailCorrectFormat] = useState(true);
     const [feedbackmsg, setFeedbackmsg] = useState("");
+    const [isLoading , setIsLoading] = useState(true)
     const navigation = useNavigate();
+
+    useEffect(()=>{
+        axios.post('http://localhost:5000/home' , {},{withCredentials : true})
+        .then(response => {
+	    setIsLoading(false)
+	    navigation("/home")
+        })
+        .catch(err => {
+		setIsLoading(false)
+        })
+    } , [])
 
     return (
         <>
+	    {(isLoading) ? <TailSpin/>
+	    : <>
             <form
                 className="bg-white rounded-2xl min-h-[600px] w-[500px] h-fit shadow-lg p-6 flex flex-col justify-center items-center"
                 onSubmit={async e => {
@@ -222,6 +237,8 @@ export default function LoginOrSignup() {
                 </Link>
                 <p>{feedbackmsg}</p>
             </form>
+	    </>
+	    } 
         </>
     );
 }
