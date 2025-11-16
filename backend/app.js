@@ -15,6 +15,8 @@ const homeController =  require('./routers/homeRouter')
 const cloudinaryMiddleware = require('./middlewares/cloudinaryMiddleware')
 const profilePicController = require('./routers/profilePicRouter')
 const googleController = require('./routers/googleLoginRouter')
+const sendUserController  = require('./routers/sendUserRouter')
+const userConnectionController = require('./routers/userConnectionRouter')
 
 connectDB()
 
@@ -31,6 +33,13 @@ app.use('/home' , homeController)
 
 app.use("/uploadProfile", [verifyPassportJWT, cloudinaryMiddleware]);
 app.use("/uploadProfile", profilePicController);
+
+app.use("/sendUsers" , verifyPassportJWT)
+app.use("/sendUsers", sendUserController)
+
+app.use("/connectUser" , verifyPassportJWT)
+app.use("/connectUser" , userConnectionController)
+
 
 mongoose.connection.once("open", ()=>{
     console.log("connected to mongoDB")

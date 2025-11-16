@@ -1,78 +1,82 @@
-import { useState , useEffect} from 'react'
-import { Camera, Mail, User } from 'lucide-react'
-import axios from 'axios'
+import { useState, useEffect } from "react";
+import { Camera, Mail, User } from "lucide-react";
+import axios from "axios";
 
 export default function Profile() {
-    const [email , setEmail] = useState('')
-    const [profileImageUrl, setProfileImageUrl] = useState('')
-    const [fullName , setFullName] = useState('')
-    const [profilePic, setProfilePic] = useState(null)
-    const [preview, setPreview] = useState(profileImageUrl)
-    const [uploading, setUploading] = useState(false)
+    const [email, setEmail] = useState("");
+    const [profileImageUrl, setProfileImageUrl] = useState("");
+    const [fullName, setFullName] = useState("");
+    const [profilePic, setProfilePic] = useState(null);
+    const [preview, setPreview] = useState(profileImageUrl);
+    const [uploading, setUploading] = useState(false);
 
-    useEffect(()=>{
-        axios.post('http://localhost:5000/home' , {},{withCredentials : true})
-        .then(response => {
-            setFullName(response.data.fullName)
-	    setEmail(response.data.email)
-	    setProfileImageUrl(response.data.profileImageUrl)
+    useEffect(() => {
+        axios
+            .post("http://localhost:5000/home", {}, { withCredentials: true })
+            .then(response => {
+                setFullName(response.data.fullName);
+                setEmail(response.data.email);
+                setProfileImageUrl(response.data.profileImageUrl);
 
-            console.log(response.data)
-        })
-        .catch(err => {
-            console.log(err)
-            navigation('/login')
-        })
-    } , [])
+                console.log(response.data);
+            })
+            .catch(err => {
+                console.log(err);
+                navigation("/login");
+            });
+    }, []);
 
-    const handleFileChange = (e) => {
-        const file = e.target.files[0]
+    const handleFileChange = e => {
+        const file = e.target.files[0];
         if (file) {
-            setProfilePic(file)
+            setProfilePic(file);
             // Create preview URL
-            const reader = new FileReader()
+            const reader = new FileReader();
             reader.onloadend = () => {
-                setPreview(reader.result)
-            }
-            reader.readAsDataURL(file)
+                setPreview(reader.result);
+            };
+            reader.readAsDataURL(file);
         }
-    }
+    };
 
     const handleSubmit = async () => {
         if (!profilePic) {
-            alert('Please select a profile picture')
-            return
+            alert("Please select a profile picture");
+            return;
         }
 
-        setUploading(true)
+        setUploading(true);
 
         // Create FormData for multipart upload
-        const formData = new FormData()
-        formData.append('profilePicture', profilePic)
+        const formData = new FormData();
+        formData.append("profilePicture", profilePic);
 
         try {
             // Replace with your backend endpoint
-            const response = await fetch('http://localhost:5000/uploadProfile', {
-                method: 'POST',
-                credentials: 'include',
-                body: formData // Don't set Content-Type header, browser will set it with boundary
-            })
+            const response = await fetch(
+                "http://localhost:5000/uploadProfile",
+                {
+                    method: "POST",
+                    credentials: "include",
+                    body: formData, // Don't set Content-Type header, browser will set it with boundary
+                }
+            );
 
-            const data = await response.json()
-            
+            const data = await response.json();
+
             if (response.ok) {
-                alert('Profile picture uploaded successfully!')
-                console.log(data)
+                alert("Profile picture uploaded successfully!");
+                console.log(data);
             } else {
-                alert('Upload failed: ' + data.error)
+                alert("Upload failed: " + data.error);
             }
         } catch (error) {
-            console.error('Error uploading:', error)
-            alert('Error uploading profile picture')
+            console.error("Error uploading:", error);
+            alert("Error uploading profile picture");
         } finally {
-            setUploading(false)
+            setUploading(false);
         }
-    }
+    };
 
     return (
         <div className="min-h-screen w-full bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 flex justify-center items-center p-8">
@@ -80,7 +84,9 @@ export default function Profile() {
                 <h1 className="text-4xl font-bold text-center bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-2">
                     Your Profile
                 </h1>
-                <p className="text-center text-gray-600 mb-8">Manage your account settings</p>
+                <p className="text-center text-gray-600 mb-8">
+                    Manage your account settings
+                </p>
 
                 {/* Profile Info Cards */}
                 <div className="space-y-3 mb-8">
@@ -90,8 +96,12 @@ export default function Profile() {
                             <User className="w-5 h-5 text-white" />
                         </div>
                         <div>
-                            <p className="text-xs text-gray-500 font-medium">Username</p>
-                            <p className="text-gray-800 font-semibold">{fullName || 'Not provided'}</p>
+                            <p className="text-xs text-gray-500 font-medium">
+                                Username
+                            </p>
+                            <p className="text-gray-800 font-semibold">
+                                {fullName || "Not provided"}
+                            </p>
                         </div>
                     </div>
 
@@ -101,8 +111,12 @@ export default function Profile() {
                             <Mail className="w-5 h-5 text-white" />
                         </div>
                         <div>
-                            <p className="text-xs text-gray-500 font-medium">Email</p>
-                            <p className="text-gray-800 font-semibold">{email || 'Not provided'}</p>
+                            <p className="text-xs text-gray-500 font-medium">
+                                Email
+                            </p>
+                            <p className="text-gray-800 font-semibold">
+                                {email || "Not provided"}
+                            </p>
                         </div>
                     </div>
                 </div>
@@ -112,16 +126,16 @@ export default function Profile() {
                     <div className="relative">
                         <div className="w-40 h-40 rounded-full overflow-hidden bg-gradient-to-br from-blue-200 to-purple-200 flex items-center justify-center shadow-lg border-4 border-white">
                             {preview ? (
-                                <img 
-                                    src={preview} 
-                                    alt="Profile preview" 
+                                <img
+                                    src={preview}
+                                    alt="Profile preview"
                                     className="w-full h-full object-cover"
                                 />
                             ) : (
                                 <span className="text-6xl">👤</span>
                             )}
                         </div>
-                        
+
                         {/* Camera icon overlay */}
                         <div className="absolute bottom-2 right-2 bg-indigo-600 rounded-full p-3 shadow-lg cursor-pointer hover:bg-indigo-700 transition-colors">
                             <Camera className="w-5 h-5 text-white" />
@@ -132,8 +146,8 @@ export default function Profile() {
                 {/* Upload Section */}
                 <div className="space-y-6">
                     <div>
-                        <label 
-                            htmlFor="profilePicture" 
+                        <label
+                            htmlFor="profilePicture"
                             className="block text-sm font-medium text-gray-700 mb-2"
                         >
                             Upload Profile Picture
@@ -162,7 +176,7 @@ export default function Profile() {
                                 Uploading...
                             </span>
                         ) : (
-                            'Upload Profile Picture'
+                            "Upload Profile Picture"
                         )}
                     </button>
 
@@ -178,5 +192,5 @@ export default function Profile() {
                 </div>
             </div>
         </div>
-    )
+    );
 }
