@@ -4,6 +4,7 @@ import { TailSpin } from "react-loader-spinner";
 import Profile from "../components/Profile";
 import Usersearch from "../components/Search";
 import axios from "axios";
+import Chat from "../components/Chat";
 
 export default function HomePage() {
     const navigation = useNavigate();
@@ -101,7 +102,7 @@ export default function HomePage() {
             <Routes>
                 <Route path="profile" element={<Profile />} />
                 <Route path="search" element={<Usersearch />} />
-                <Route path="chat" element={<h1>Chat with the people</h1>} />
+                <Route path="chat" element={<Chat />} />
             </Routes>
         </div>
     );

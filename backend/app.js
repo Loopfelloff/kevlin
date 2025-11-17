@@ -17,6 +17,7 @@ const profilePicController = require('./routers/profilePicRouter')
 const googleController = require('./routers/googleLoginRouter')
 const sendUserController  = require('./routers/sendUserRouter')
 const userConnectionController = require('./routers/userConnectionRouter')
+const sendConnectionController = require('./routers/sendConnectionsRouter')
 
 connectDB()
 
@@ -40,6 +41,8 @@ app.use("/sendUsers", sendUserController)
 app.use("/connectUser" , verifyPassportJWT)
 app.use("/connectUser" , userConnectionController)
 
+app.use("/sendConnection" , verifyPassportJWT)
+app.use("/sendConnection" ,sendConnectionController)
 
 mongoose.connection.once("open", ()=>{
     console.log("connected to mongoDB")
