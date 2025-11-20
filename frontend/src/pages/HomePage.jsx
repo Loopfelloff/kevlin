@@ -6,7 +6,7 @@ import Usersearch from "../components/Search";
 import axios from "axios";
 import Chat from "../components/Chat";
 
-export default function HomePage() {
+export default function HomePage({ socket }) {
     const navigation = useNavigate();
     const [username, setUsername] = useState("");
     const [email, setEmail] = useState("");
@@ -21,7 +21,7 @@ export default function HomePage() {
                 setUsername(response.data.fullName);
                 setEmail(response.data.email);
                 setProfileImageUrl(response.data.profileImageUrl);
-
+                socket.emit("register", response.data.fullName);
                 console.log(response.data);
             })
             .catch(err => {
@@ -102,7 +102,7 @@ export default function HomePage() {
             <Routes>
                 <Route path="profile" element={<Profile />} />
                 <Route path="search" element={<Usersearch />} />
-                <Route path="chat" element={<Chat />} />
+                <Route path="chat" element={<Chat socket={socket} />} />
             </Routes>
         </div>
     );

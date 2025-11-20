@@ -13,15 +13,11 @@ const sendConnectionsHandler = async (req ,res)=>{
 
 	const userId = (await UserConnection.find({from : foundUser._id.toString()})).map(item => item.to.toString()) 
 
-	console.log(userId)
-
 	const findConnectionUsers = (await Users.find({_id : userId})).map(item => {
 	    return {id : item._id.toString(), email : item.email , profileImageUrl : item.profileImageUrl , fullName : item.fullName}
 	} ) 
 
-	console.log(findConnectionUsers)
-
-	res.status(200).json({msg:'successful retreival', result:findConnectionUsers})
+	res.status(200).json({msg:'successful retreival', result:findConnectionUsers , sender : req.user.fullName , senderId : foundUser._id.toString()})
 
     } catch (error) {
     	

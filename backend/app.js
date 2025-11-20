@@ -1,12 +1,10 @@
 require('dotenv').config()
-const express = require('express')
-const app = express()
 const cors = require('cors')
 const cookie_parser = require('cookie-parser')
 const connectDB = require('./config/database')
 const mongoose = require('mongoose')
 const port = process.env.PORT || 5000
-
+const {io , server , app , express} = require('./server')
 const corsOptions = require('./config/corsOptions')
 const signupController = require('./routers/signupRouter')
 const loginController  = require('./routers/loginRouter')
@@ -18,6 +16,7 @@ const googleController = require('./routers/googleLoginRouter')
 const sendUserController  = require('./routers/sendUserRouter')
 const userConnectionController = require('./routers/userConnectionRouter')
 const sendConnectionController = require('./routers/sendConnectionsRouter')
+const messageController = require('./routers/messageRouter')
 
 connectDB()
 
@@ -44,9 +43,12 @@ app.use("/connectUser" , userConnectionController)
 app.use("/sendConnection" , verifyPassportJWT)
 app.use("/sendConnection" ,sendConnectionController)
 
+app.use("/sendMessage" , verifyPassportJWT)
+app.use("/sendMessage" ,messageController)
+
 mongoose.connection.once("open", ()=>{
     console.log("connected to mongoDB")
-    app.listen(port, '0.0.0.0', ()=>{
+    server.listen(port, '0.0.0.0', ()=>{
 	console.log("the server is listening at port : " , port)
     })
 })
